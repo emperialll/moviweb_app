@@ -1,0 +1,85 @@
+from flask import Flask, render_template, request
+from data_management.JSONDataManager import JSONDataManager
+
+app = Flask(__name__)
+
+# Use the appropriate path to your JSON file
+data_manager = JSONDataManager("user_data/users.json")
+
+
+@app.route('/')
+def home():
+    return "Welcome to MovieWeb App!"
+
+
+@app.route('/users')
+def list_users():
+    users = data_manager.get_all_users()
+    return render_template('users.html', users=users)
+
+
+@app.route('/users/<user_id>')
+def my_movies(user_id):
+    users = data_manager.get_all_users()
+    user_name = users[user_id]["name"]
+    user_movies = data_manager.get_user_movies(user_id)
+    return render_template('movies.html', movies=user_movies,
+                           user_name=user_name,
+                           user_id=user_id)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        user_details = {"name": name, "movies": {}}
+        data_manager.add_user(user_details)
+        return "Registration successful!"
+
+        # Render the registration form template for GET requests
+    return render_template('register.html')
+
+
+@app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])
+def add_movies(user_id):
+    if request.method == 'POST':
+        movie_title = request.form.get('name')
+        data_manager.add_movie(user_id, movie_title)
+        return "Movie has been added successfully!"
+
+        # Render the registration form template for GET requests
+    return render_template('add-movie.html', user_id=user_id)
+
+
+@app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
+def update_movies(user_id, movie_id):
+    movies = data_manager.get_user_movies(user_id)
+    movie = movies[movie_id]
+    if request.method == 'POST':
+        movie_title = request.form.get('name')
+        movie_director = request.form.get('director')
+        movie_rating = request.form.get('rating')
+        movie_year = request.form.get('year')
+        data_manager.update_movie(user_id, movie_id, movie_title,
+                                  movie_director, movie_rating, movie_year)
+        return "Movie has been updated successfully!"
+
+        # Render the registration form template for GET requests
+    return render_template('update-movie.html',
+                           user_id=user_id,
+                           movie_id=movie_id,
+                           movie_title=movie['name'],
+                           movie_rating=movie['rating'],
+                           movie_director=movie['director'],
+                           movie_year=movie['year'])
+
+
+@app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])
+def delete_movie(user_id, movie_id):
+    if request.method == 'POST':
+        data_manager.delete_movie(user_id, movie_id)
+        return "The movie has been deleted successfully"
+
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000, debug=True)

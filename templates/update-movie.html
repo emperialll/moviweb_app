@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User's Movies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 300px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update {{ movie_title }}</h1>
+
+    <form action="/users/{{ user_id }}/update_movie/{{ movie_id }}" method="POST">
+        <label for="name">Movie Title:</label>
+        <input type="text" id="name" name="name" value="{{ movie_title }}" required>
+
+        <label for="director">Director:</label>
+        <input type="text" id="director" name="director" value="{{ movie_director }}" required>
+
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" value="{{ movie_rating }}" step="0.1" required>
+
+        <label for="year">Year:</label>
+        <input type="text" id="year" name="year" value="{{ movie_year }}" required>
+
+        <input type="submit" value="Update Movie">
+    </form>
+</body>
+</html>
