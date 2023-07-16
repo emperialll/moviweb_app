@@ -13,6 +13,18 @@
                 "director": "Aaron Wolf",
                 "rating": 3.9,
                 "year": "2020"
+            },
+            "5": {
+                "name": "Ghost in the Shell: The New Movie",
+                "director": "Kazuchika Kise, Kazuya Nomura",
+                "rating": 6.6,
+                "year": "2015"
+            },
+            "6": {
+                "name": "Ghost in the Shell: The New Movie",
+                "director": "Kazuchika Kise, Kazuya Nomura",
+                "rating": 6.6,
+                "year": "2015"
             }
         }
     },
