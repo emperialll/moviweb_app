@@ -21,11 +21,14 @@ def list_users():
 @app.route('/users/<user_id>')
 def my_movies(user_id):
     users = data_manager.get_all_users()
-    user_name = users[user_id]["name"]
-    user_movies = data_manager.get_user_movies(user_id)
-    return render_template('movies.html', movies=user_movies,
-                           user_name=user_name,
-                           user_id=user_id)
+    if user_id in users.keys():
+        user_name = users[user_id]["name"]
+        user_movies = data_manager.get_user_movies(user_id)
+        return render_template('movies.html', movies=user_movies,
+                               user_name=user_name,
+                               user_id=user_id)
+    else:
+        return render_template('304.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -44,7 +47,8 @@ def register():
 def add_movies(user_id):
     if request.method == 'POST':
         movie_title = request.form.get('name')
-        data_manager.add_movie(user_id, movie_title)
+        if data_manager.add_movie(user_id, movie_title) is False:
+            return "Movie not found!"
         return "Movie has been added successfully!"
 
         # Render the registration form template for GET requests
