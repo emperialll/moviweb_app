@@ -1,7 +1,7 @@
 import pytest
 import json
 from data_management.JSONDataManager import JSONDataManager
-#TEST
+
 # Test data
 USER_DATA = {
     "1": {
