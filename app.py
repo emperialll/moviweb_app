@@ -9,7 +9,7 @@ data_manager = JSONDataManager("user_data/users.json")
 
 @app.route('/')
 def home():
-    return "Welcome to MovieWeb App!"
+    return render_template('index.html')
 
 
 @app.route('/users')
