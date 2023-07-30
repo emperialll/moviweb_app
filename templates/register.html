@@ -3,64 +3,111 @@
 <head>
   <title>Registration</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: url('../static/images/red-chairs.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
 
-    form {
-      width: 300px;
-      margin: 0 auto;
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      color: #ddd;
+    }
+
+    .login-form {
+      max-width: 400px;
       padding: 20px;
-      border: 1px solid #ccc;
+      border-radius: 10px;
+      text-align: center;
       background-color: #f7f7f7;
-      border-radius: 4px;
+      background: url('../static/images/red-chairs.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
 
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
+      margin: 5px 0;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      margin-bottom: 10px;
+      border-radius: 5px;
+      background-color: #ddd;
     }
 
-    input[type="submit"] {
-      background-color: #4CAF50;
+    .login-form input[type="submit"],
+    .login-form .cancel-btn {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #007bff;
       color: #fff;
-      padding: 10px 16px;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
     }
 
-    input[type="submit"]:hover {
-      background-color: #45a049;
+    .login-form input[type="submit"]:hover {
+      background-color: #043e7d;
     }
+    .login-form .cancel-btn:hover {
+      background-color: #ac2020;
+    }
+
+    /* Additional style for the cancel button to match the first template */
+    .login-form .cancel-btn {
+      background-color: #ff2c2c; /* Same background color as the register button */
+      color: #fff; /* Text color same as the register button's text color */
+    }
+
+    /* Remove the default button styles (optional, for better consistency) */
+    button {
+      border: none;
+      background: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+      outline: inherit;
+      text-decoration: none; /* Removes the underline from the button (optional) */
+    }
+
   </style>
 </head>
 <body>
-  <form action="/register" method="POST">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
+  <div class="container">
+    <h1>Registration</h1>
+    <div class="login-form">
+      <form action="/register" method="POST">
+        <input type="text" id="name" name="name" placeholder="Name" required>
 
-<!--    <label for="email">Email:</label>-->
-<!--    <input type="email" id="email" name="email" required>-->
+        <!-- Additional fields (if needed) -->
+        <!-- <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-<!--    <label for="password">Password:</label>-->
-<!--    <input type="password" id="password" name="password" required>-->
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-<!--    <label for="confirm-password">Confirm Password:</label>-->
-<!--    <input type="password" id="confirm-password" name="confirm-password" required>-->
+        <label for="confirm-password">Confirm Password:</label>
+        <input type="password" id="confirm-password" name="confirm-password" required> -->
 
-    <input type="submit" value="Register">
-  </form>
+        <input type="submit" value="Register">
+        <a href="/">
+          <button type="button" class="cancel-btn">Cancel</button>
+        </a>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
