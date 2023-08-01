@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request
 from data_management.JSONDataManager import JSONDataManager
+from data_management.CSVDataManager import CSVDataManager
 
 app = Flask(__name__)
 
-# Use the appropriate path to your JSON file
-data_manager = JSONDataManager("user_data/users.json")
+data_file_path = "user_data/users.csv"
+# Use the appropriate path to your JSON or CSV file
+# data_manager = JSONDataManager(data_file_path)
+data_manager = CSVDataManager(data_file_path)
 
 
 @app.route('/')
@@ -30,17 +33,27 @@ def my_movies(user_id):
     else:
         return render_template('304.html')
 
+if data_file_path.lower().endswith('.json'):
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if request.method == 'POST':
+            name = request.form.get('name')
+            user_details = {"name": name, "movies": {}}
+            data_manager.add_user(user_details)
+            return "Registration successful!"
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        user_details = {"name": name, "movies": {}}
-        data_manager.add_user(user_details)
-        return "Registration successful!"
+            # Render the registration form template for GET requests
+        return render_template('register.html')
+elif data_file_path.lower().endswith('.csv'):
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if request.method == 'POST':
+            name = request.form.get('name')
+            data_manager.add_user(name)
+            return "Registration successful!"
 
-        # Render the registration form template for GET requests
-    return render_template('register.html')
+            # Render the registration form template for GET requests
+        return render_template('register.html')
 
 
 @app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])
