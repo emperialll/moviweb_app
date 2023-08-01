@@ -128,19 +128,20 @@ class CSVDataManager(DataManagerInterface):
         write_csv_file(self.filename, users)
 
     def update_movie(self, user_id, movie_id, movie_title, movie_director,
-                     movie_rating, movie_year):
+                     movie_rating, movie_year, movie_note):
         users = read_csv_file(self.filename)
         if users is not None:
             try:
                 users[user_id]["movies"][movie_id] = {'name': movie_title,
                                                       'director': movie_director,
+                                                      'year': movie_year,
                                                       'rating': movie_rating,
-                                                      'year': movie_year}
-                write_csv_file(self.filename, users)
+                                                      'note': movie_note}                
             except KeyError:
                 print("Invalid user_id or movie_id")
             except ValueError:
                 print("Invalid movie rating or year")
+        write_csv_file(self.filename, users)
 
     def delete_movie(self, user_id, movie_id):
         users = read_csv_file(self.filename)

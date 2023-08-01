@@ -77,8 +77,9 @@ def update_movies(user_id, movie_id):
         movie_director = request.form.get('director')
         movie_rating = request.form.get('rating')
         movie_year = request.form.get('year')
+        movie_note = request.form.get('note')
         data_manager.update_movie(user_id, movie_id, movie_title,
-                                  movie_director, movie_rating, movie_year)
+                                  movie_director, movie_rating, movie_year, movie_note)
         return "Movie has been updated successfully!"
 
         # Render the registration form template for GET requests
@@ -88,7 +89,8 @@ def update_movies(user_id, movie_id):
                            movie_title=movie['name'],
                            movie_rating=movie['rating'],
                            movie_director=movie['director'],
-                           movie_year=movie['year'])
+                           movie_year=movie['year'],
+                           movie_note=movie['note'])
 
 
 @app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])
