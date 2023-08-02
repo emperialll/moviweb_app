@@ -4,10 +4,13 @@ from data_management.CSVDataManager import CSVDataManager
 
 app = Flask(__name__)
 
-data_file_path = "user_data/users.csv"
 # Use the appropriate path to your JSON or CSV file
-# data_manager = JSONDataManager(data_file_path)
-data_manager = CSVDataManager(data_file_path)
+
+data_file_path = "user_data/users.json"
+data_manager = JSONDataManager(data_file_path)
+
+# data_file_path = "user_data/users.csv"
+# data_manager = CSVDataManager(data_file_path)
 
 
 @app.route('/')
