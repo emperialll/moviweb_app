@@ -21,20 +21,35 @@ Imported Data Managers:
     CSVDataManager: A class from 'data_management.CSVDataManager' for 
     managing CSV data.
 """
+import os
 from flask import Flask, render_template, request
-from data_management.JSONDataManager import JSONDataManager
-from data_management.CSVDataManager import CSVDataManager
-
+# from data_management.JSONDataManager import JSONDataManager
+# from data_management.CSVDataManager import CSVDataManager
+from data_management.SQL_Data_Models import db, User, Movies
 
 app = Flask(__name__)
 
+# Setting the database URI
+db_path = os.path.abspath('user_data/user_movies.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+
+# Initialize the SQLAlchemy extension with the Flask application
+db.init_app(app)
+
+
+#######################   JSON / CSV   ########################
+###############################################################
+###############################################################
+
 # Use the appropriate path to your JSON or CSV file
 
-DATA_FILE_PATH = "user_data/users.json"
-data_manager = JSONDataManager(DATA_FILE_PATH)
+# DATA_FILE_PATH = "user_data/users.json"
+# data_manager = JSONDataManager(DATA_FILE_PATH)
 
 # DATA_FILE_PATH = "user_data/users.csv"
 # data_manager = CSVDataManager(DATA_FILE_PATH)
+
+##############################################################
 
 
 def is_item_in_dict(item, dictionary):
