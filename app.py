@@ -52,199 +52,199 @@ db.init_app(app)
 ##############################################################
 
 
-def is_item_in_dict(item, dictionary):
-    """
-    Check if an item is present in a dictionary.
-    This function checks whether the specified item exists as a key in the given dictionary.
-    Args:
-        item: The item to be checked for presence in the dictionary.
-        dictionary (dict): The dictionary to be checked.
-    Returns:
-        bool: True if the item is found in the dictionary as a key, False otherwise.
-    """
-    if item in dictionary.keys():
-        return True
-    else:
-        return False
+# def is_item_in_dict(item, dictionary):
+#     """
+#     Check if an item is present in a dictionary.
+#     This function checks whether the specified item exists as a key in the given dictionary.
+#     Args:
+#         item: The item to be checked for presence in the dictionary.
+#         dictionary (dict): The dictionary to be checked.
+#     Returns:
+#         bool: True if the item is found in the dictionary as a key, False otherwise.
+#     """
+#     if item in dictionary.keys():
+#         return True
+#     else:
+#         return False
 
 
-@app.route('/')
-def home():
-    """
-    Route: Home
-    Renders the homepage template.
-    Returns:
-        Rendered HTML template.
-    """
-    return render_template('index.html')
+# @app.route('/')
+# def home():
+#     """
+#     Route: Home
+#     Renders the homepage template.
+#     Returns:
+#         Rendered HTML template.
+#     """
+#     return render_template('index.html')
 
 
-@app.route('/users')
-def list_users():
-    """
-    Route: List Users
-    Retrieves a list of users and renders the users template.
-    Returns:
-        Rendered HTML template with user data.
-    """
-    users = data_manager.get_all_users()
-    return render_template('users.html', users=users)
+# @app.route('/users')
+# def list_users():
+#     """
+#     Route: List Users
+#     Retrieves a list of users and renders the users template.
+#     Returns:
+#         Rendered HTML template with user data.
+#     """
+#     users = data_manager.get_all_users()
+#     return render_template('users.html', users=users)
 
 
-@app.route('/users/<user_id>')
-def my_movies(user_id):
-    """
-    Route: User Movies
-    Retrieves movies for a specific user and renders the movies template.
-    Args:
-        user_id (str): User ID.
-    Returns:
-        Rendered HTML template with user's movies.
-    """
-    try:
-        users = data_manager.get_all_users()
-        if is_item_in_dict(user_id, users):
-            user_name = users[user_id]["name"]
-            user_movies = data_manager.get_user_movies(user_id)
-            return render_template('movies.html', movies=user_movies,
-                                   user_name=user_name,
-                                   user_id=user_id)
-        else:
-            return render_template('304.html')
-    except Exception as error:
-        # Handle the exception appropriately, e.g., logging, error message, etc.
-        return render_template('error.html', error_message=str(error))
+# @app.route('/users/<user_id>')
+# def my_movies(user_id):
+#     """
+#     Route: User Movies
+#     Retrieves movies for a specific user and renders the movies template.
+#     Args:
+#         user_id (str): User ID.
+#     Returns:
+#         Rendered HTML template with user's movies.
+#     """
+#     try:
+#         users = data_manager.get_all_users()
+#         if is_item_in_dict(user_id, users):
+#             user_name = users[user_id]["name"]
+#             user_movies = data_manager.get_user_movies(user_id)
+#             return render_template('movies.html', movies=user_movies,
+#                                    user_name=user_name,
+#                                    user_id=user_id)
+#         else:
+#             return render_template('304.html')
+#     except Exception as error:
+#         # Handle the exception appropriately, e.g., logging, error message, etc.
+#         return render_template('error.html', error_message=str(error))
 
 
-if DATA_FILE_PATH.lower().endswith('.json'):
-    @app.route('/register', methods=['GET', 'POST'])
-    def register():
-        """
-        Route: Register (JSON)
-        Handles user registration and rendering of registration form.
-        Returns:
-            "Registration successful!" upon successful POST request.
-            Rendered HTML registration form template for GET request.
-        """
-        if request.method == 'POST':
-            name = request.form.get('name')
-            user_details = {"name": name, "movies": {}}
-            data_manager.add_user(user_details)
-            return "Registration successful!"
+# if DATA_FILE_PATH.lower().endswith('.json'):
+#     @app.route('/register', methods=['GET', 'POST'])
+#     def register():
+#         """
+#         Route: Register (JSON)
+#         Handles user registration and rendering of registration form.
+#         Returns:
+#             "Registration successful!" upon successful POST request.
+#             Rendered HTML registration form template for GET request.
+#         """
+#         if request.method == 'POST':
+#             name = request.form.get('name')
+#             user_details = {"name": name, "movies": {}}
+#             data_manager.add_user(user_details)
+#             return "Registration successful!"
 
-        return render_template('register.html')
-elif DATA_FILE_PATH.lower().endswith('.csv'):
-    @app.route('/register', methods=['GET', 'POST'])
-    def register():
-        """
-        Route: Register (CSV)
-        Handles user registration and rendering of registration form.
-        Returns:
-            "Registration successful!" upon successful POST request.
-            Rendered HTML registration form template for GET request.
-        """
-        if request.method == 'POST':
-            name = request.form.get('name')
-            data_manager.add_user(name)
-            return "Registration successful!"
+#         return render_template('register.html')
+# elif DATA_FILE_PATH.lower().endswith('.csv'):
+#     @app.route('/register', methods=['GET', 'POST'])
+#     def register():
+#         """
+#         Route: Register (CSV)
+#         Handles user registration and rendering of registration form.
+#         Returns:
+#             "Registration successful!" upon successful POST request.
+#             Rendered HTML registration form template for GET request.
+#         """
+#         if request.method == 'POST':
+#             name = request.form.get('name')
+#             data_manager.add_user(name)
+#             return "Registration successful!"
 
-        return render_template('register.html')
-
-
-@app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])
-def add_movies(user_id):
-    """
-    Route: Add Movie
-    Handles adding a movie to a user's collection and rendering the movie addition form.
-    Args:
-        user_id (str): User ID.
-    Returns:
-        "Movie has been added successfully!" upon successful POST request.
-        "Movie not found!" if the movie addition is unsuccessful.
-        Rendered HTML add-movie form template for GET request.
-    """
-    if request.method == 'POST':
-        movie_title = request.form.get('name')
-        if data_manager.add_movie(user_id, movie_title) is False:
-            return "Movie not found!"
-        return "Movie has been added successfully!"
-
-    return render_template('add-movie.html', user_id=user_id)
+#         return render_template('register.html')
 
 
-@app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
-def update_movies(user_id, movie_id):
-    """
-    Route: Update Movie
+# @app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])
+# def add_movies(user_id):
+#     """
+#     Route: Add Movie
+#     Handles adding a movie to a user's collection and rendering the movie addition form.
+#     Args:
+#         user_id (str): User ID.
+#     Returns:
+#         "Movie has been added successfully!" upon successful POST request.
+#         "Movie not found!" if the movie addition is unsuccessful.
+#         Rendered HTML add-movie form template for GET request.
+#     """
+#     if request.method == 'POST':
+#         movie_title = request.form.get('name')
+#         if data_manager.add_movie(user_id, movie_title) is False:
+#             return "Movie not found!"
+#         return "Movie has been added successfully!"
 
-    Handles updating movie details for a user and rendering the movie update form.
-
-    Args:
-        user_id (str): User ID.
-        movie_id (str): Movie ID.
-
-    Returns:
-        "Movie has been updated successfully!" upon successful POST request.
-        Rendered HTML update-movie form template for GET request.
-    """
-    try:
-        movies = data_manager.get_user_movies(user_id)
-        movie = movies[movie_id]
-        if request.method == 'POST':
-            movie_title = request.form.get('name')
-            movie_director = request.form.get('director')
-            movie_rating = request.form.get('rating')
-            movie_year = request.form.get('year')
-            movie_note = request.form.get('note')
-            data_manager.update_movie(user_id, movie_id, movie_title,
-                                      movie_director, movie_rating,
-                                      movie_year, movie_note)
-            return "Movie has been updated successfully!"
-
-        return render_template('update-movie.html',
-                               user_id=user_id,
-                               movie_id=movie_id,
-                               movie_title=movie['name'],
-                               movie_rating=movie['rating'],
-                               movie_director=movie['director'],
-                               movie_year=movie['year'],
-                               movie_note=movie['note'])
-    except Exception as error:
-        # Handle the exception appropriately, e.g., logging, error message, etc.
-        return render_template('error.html', error_message=str(error))
+#     return render_template('add-movie.html', user_id=user_id)
 
 
-@app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])
-def delete_movie(user_id, movie_id):
-    """
-    Route: Delete Movie
-    Handles deleting a movie from a user's collection.
-    Args:
-        user_id (str): User ID.
-        movie_id (str): Movie ID.
-    Returns:
-        "The movie has been deleted successfully" upon successful POST request.
-    """
-    try:
-        if request.method == 'POST':
-            data_manager.delete_movie(user_id, movie_id)
-            return "The movie has been deleted successfully"
-    except Exception as error:
-        # Handle the exception appropriately, e.g., logging, error message, etc.
-        return render_template('error.html', error_message=str(error))
+# @app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
+# def update_movies(user_id, movie_id):
+#     """
+#     Route: Update Movie
+
+#     Handles updating movie details for a user and rendering the movie update form.
+
+#     Args:
+#         user_id (str): User ID.
+#         movie_id (str): Movie ID.
+
+#     Returns:
+#         "Movie has been updated successfully!" upon successful POST request.
+#         Rendered HTML update-movie form template for GET request.
+#     """
+#     try:
+#         movies = data_manager.get_user_movies(user_id)
+#         movie = movies[movie_id]
+#         if request.method == 'POST':
+#             movie_title = request.form.get('name')
+#             movie_director = request.form.get('director')
+#             movie_rating = request.form.get('rating')
+#             movie_year = request.form.get('year')
+#             movie_note = request.form.get('note')
+#             data_manager.update_movie(user_id, movie_id, movie_title,
+#                                       movie_director, movie_rating,
+#                                       movie_year, movie_note)
+#             return "Movie has been updated successfully!"
+
+#         return render_template('update-movie.html',
+#                                user_id=user_id,
+#                                movie_id=movie_id,
+#                                movie_title=movie['name'],
+#                                movie_rating=movie['rating'],
+#                                movie_director=movie['director'],
+#                                movie_year=movie['year'],
+#                                movie_note=movie['note'])
+#     except Exception as error:
+#         # Handle the exception appropriately, e.g., logging, error message, etc.
+#         return render_template('error.html', error_message=str(error))
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    """
-    Route: 404 Error Handler
-    Handles rendering the 404 page.
-    Args:
-        e: Error object.
-    Returns:
-        Rendered HTML template for 404 page.
-    """
-    return render_template('404.html'), 404
+# @app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])
+# def delete_movie(user_id, movie_id):
+#     """
+#     Route: Delete Movie
+#     Handles deleting a movie from a user's collection.
+#     Args:
+#         user_id (str): User ID.
+#         movie_id (str): Movie ID.
+#     Returns:
+#         "The movie has been deleted successfully" upon successful POST request.
+#     """
+#     try:
+#         if request.method == 'POST':
+#             data_manager.delete_movie(user_id, movie_id)
+#             return "The movie has been deleted successfully"
+#     except Exception as error:
+#         # Handle the exception appropriately, e.g., logging, error message, etc.
+#         return render_template('error.html', error_message=str(error))
+
+
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     """
+#     Route: 404 Error Handler
+#     Handles rendering the 404 page.
+#     Args:
+#         e: Error object.
+#     Returns:
+#         Rendered HTML template for 404 page.
+#     """
+#     return render_template('404.html'), 404
 
 
 if __name__ == '__main__':

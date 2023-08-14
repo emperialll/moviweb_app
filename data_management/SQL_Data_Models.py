@@ -1,3 +1,5 @@
+import os
+import sys
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 
@@ -47,6 +49,9 @@ class Movies(db.Model):
 
 
 if __name__ == '__main__':
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Add the parent directory to sys.path
+    sys.path.insert(0, parent_dir)
     # Create the new tables
     from app import app
     with app.app_context():
