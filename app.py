@@ -80,27 +80,28 @@ db.init_app(app)
 #         return False
 
 
-# @app.route('/')
-# def home():
-#     """
-#     Route: Home
-#     Renders the homepage template.
-#     Returns:
-#         Rendered HTML template.
-#     """
-#     return render_template('index.html')
+@app.route('/')
+def home():
+    """
+    Route: Home
+    Renders the homepage template.
+    Returns:
+        Rendered HTML template.
+    """
+    return render_template('index.html')
 
 
-# @app.route('/users')
-# def list_users():
-#     """
-#     Route: List Users
-#     Retrieves a list of users and renders the users template.
-#     Returns:
-#         Rendered HTML template with user data.
-#     """
-#     users = data_manager.get_all_users()
-#     return render_template('users.html', users=users)
+@app.route('/users')
+def list_users():
+    """
+    Route: List Users
+    Retrieves a list of users and renders the users template.
+    Returns:
+        Rendered HTML template with user data.
+    """
+    # Fetch the list of users from the database
+    users = User.query.all()
+    return render_template('users.html', users=users)
 
 
 # @app.route('/users/<user_id>')
@@ -140,10 +141,10 @@ def register():
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
-        # Create a new Author object with the form data
+        # Create a new User object with the form data
         new_user = User(name=name, email=email)
 
-        # Add the Author to the database
+        # Add the user to the database
         db.session.add(new_user)
         db.session.commit()
 
