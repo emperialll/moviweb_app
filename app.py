@@ -21,11 +21,23 @@ Imported Data Managers:
     CSVDataManager: A class from 'data_management.CSVDataManager' for 
     managing CSV data.
 """
-import os
-from flask import Flask, render_template, request
+
 # from data_management.JSONDataManager import JSONDataManager
 # from data_management.CSVDataManager import CSVDataManager
+
+from flask import Flask, render_template, request
 from data_management.SQL_Data_Models import db, User, Movies
+import os
+import sys
+
+
+# Get the directory containing app.py
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Add the parent directory of current_dir (project_root) to sys.path
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
 
 app = Flask(__name__)
 
@@ -116,39 +128,28 @@ db.init_app(app)
 #         return render_template('error.html', error_message=str(error))
 
 
-# if DATA_FILE_PATH.lower().endswith('.json'):
-#     @app.route('/register', methods=['GET', 'POST'])
-#     def register():
-#         """
-#         Route: Register (JSON)
-#         Handles user registration and rendering of registration form.
-#         Returns:
-#             "Registration successful!" upon successful POST request.
-#             Rendered HTML registration form template for GET request.
-#         """
-#         if request.method == 'POST':
-#             name = request.form.get('name')
-#             user_details = {"name": name, "movies": {}}
-#             data_manager.add_user(user_details)
-#             return "Registration successful!"
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+    Route: Register (JSON)
+    Handles user registration and rendering of registration form.
+    Returns:
+        "Registration successful!" upon successful POST request.
+        Rendered HTML registration form template for GET request.
+    """
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        # Create a new Author object with the form data
+        new_user = User(name=name, email=email)
 
-#         return render_template('register.html')
-# elif DATA_FILE_PATH.lower().endswith('.csv'):
-#     @app.route('/register', methods=['GET', 'POST'])
-#     def register():
-#         """
-#         Route: Register (CSV)
-#         Handles user registration and rendering of registration form.
-#         Returns:
-#             "Registration successful!" upon successful POST request.
-#             Rendered HTML registration form template for GET request.
-#         """
-#         if request.method == 'POST':
-#             name = request.form.get('name')
-#             data_manager.add_user(name)
-#             return "Registration successful!"
+        # Add the Author to the database
+        db.session.add(new_user)
+        db.session.commit()
 
-#         return render_template('register.html')
+        return "The author has been added successfully!"
+
+    return render_template('register.html')
 
 
 # @app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])

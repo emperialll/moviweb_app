@@ -47,12 +47,18 @@ class Movies(db.Model):
     def __repr__(self):
         return self.__str__()
 
+######################## This section is being used only for table creation ####################
+################################################################################################
+################################################################################################
+# IMPORTANT:
+# Upon using this part comment out db.init_app(app) from app.py
 
-if __name__ == '__main__':
-    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # Add the parent directory to sys.path
-    sys.path.insert(0, parent_dir)
-    # Create the new tables
-    from app import app
-    with app.app_context():
-        db.create_all()
+# if __name__ == '__main__':
+#     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#     # Add the parent directory to sys.path
+#     sys.path.insert(0, parent_dir)
+#     # Create the new tables
+#     from app import app
+#     with app.app_context():
+#         db.init_app(app)
+#         db.create_all()
