@@ -104,29 +104,32 @@ def list_users():
     return render_template('users.html', users=users)
 
 
-# @app.route('/users/<user_id>')
-# def my_movies(user_id):
-#     """
-#     Route: User Movies
-#     Retrieves movies for a specific user and renders the movies template.
-#     Args:
-#         user_id (str): User ID.
-#     Returns:
-#         Rendered HTML template with user's movies.
-#     """
-#     try:
-#         users = data_manager.get_all_users()
-#         if is_item_in_dict(user_id, users):
-#             user_name = users[user_id]["name"]
-#             user_movies = data_manager.get_user_movies(user_id)
-#             return render_template('movies.html', movies=user_movies,
-#                                    user_name=user_name,
-#                                    user_id=user_id)
-#         else:
-#             return render_template('304.html')
-#     except Exception as error:
-#         # Handle the exception appropriately, e.g., logging, error message, etc.
-#         return render_template('error.html', error_message=str(error))
+@app.route('/users/<user_id>')
+def my_movies(user_id):
+    """
+    Route: User Movies
+    Retrieves movies for a specific user and renders the movies template.
+    Args:
+        user_id (str): User ID.
+    Returns:
+        Rendered HTML template with user's movies.
+    """
+    try:
+        users = User.query.all()
+        movies = Movies.query.all()
+        user_favorite_movies = []
+        for movie in movies:
+            if movie.user_id == user_id:
+                user_favorite_movies.append(movie)
+        for user in users:
+            if user.id == int(user_id):
+                name = user.name
+        return render_template('movies.html', movies=user_favorite_movies,
+                               name=name,
+                               id=user_id)
+    except Exception as error:
+        # Handle the exception appropriately, e.g., logging, error message, etc.
+        return render_template('error.html', error_message=str(error))
 
 
 @app.route('/register', methods=['GET', 'POST'])
