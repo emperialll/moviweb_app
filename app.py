@@ -24,12 +24,15 @@ Imported Data Managers:
 
 # from data_management.JSONDataManager import JSONDataManager
 # from data_management.CSVDataManager import CSVDataManager
-
+import requests
+import json
 from flask import Flask, render_template, request
 from data_management.SQL_Data_Models import db, User, Movies
 import os
 import sys
 
+# OMDB API to get movie data
+API: str = 'http://www.omdbapi.com/?apikey=6f0c3bf6&t='
 
 # Get the directory containing app.py
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -62,22 +65,6 @@ db.init_app(app)
 # data_manager = CSVDataManager(DATA_FILE_PATH)
 
 ##############################################################
-
-
-# def is_item_in_dict(item, dictionary):
-#     """
-#     Check if an item is present in a dictionary.
-#     This function checks whether the specified item exists as a key in the given dictionary.
-#     Args:
-#         item: The item to be checked for presence in the dictionary.
-#         dictionary (dict): The dictionary to be checked.
-#     Returns:
-#         bool: True if the item is found in the dictionary as a key, False otherwise.
-#     """
-#     if item in dictionary.keys():
-#         return True
-#     else:
-#         return False
 
 
 @app.route('/')
@@ -119,7 +106,7 @@ def my_movies(user_id):
         movies = Movies.query.all()
         user_favorite_movies = []
         for movie in movies:
-            if movie.user_id == user_id:
+            if movie.user_id == int(user_id):
                 user_favorite_movies.append(movie)
         for user in users:
             if user.id == int(user_id):
@@ -156,25 +143,41 @@ def register():
     return render_template('register.html')
 
 
-# @app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])
-# def add_movies(user_id):
-#     """
-#     Route: Add Movie
-#     Handles adding a movie to a user's collection and rendering the movie addition form.
-#     Args:
-#         user_id (str): User ID.
-#     Returns:
-#         "Movie has been added successfully!" upon successful POST request.
-#         "Movie not found!" if the movie addition is unsuccessful.
-#         Rendered HTML add-movie form template for GET request.
-#     """
-#     if request.method == 'POST':
-#         movie_title = request.form.get('name')
-#         if data_manager.add_movie(user_id, movie_title) is False:
-#             return "Movie not found!"
-#         return "Movie has been added successfully!"
+@app.route('/users/<user_id>/add_movie', methods=['GET', 'POST'])
+def add_movies(user_id):
+    """
+    Route: Add Movie
+    Handles adding a movie to a user's collection and rendering the movie addition form.
+    Args:
+        user_id (str): User ID.
+    Returns:
+        "Movie has been added successfully!" upon successful POST request.
+        "Movie not found!" if the movie addition is unsuccessful.
+        Rendered HTML add-movie form template for GET request.
+    """
+    if request.method == 'POST':
+        title = request.form.get('name')
 
-#     return render_template('add-movie.html', user_id=user_id)
+        response = requests.get(API + title)
+        response.raise_for_status()
+        movie_dict_data = json.loads(response.text)
+        if movie_dict_data['Response'] == 'False':
+            return "Movie not found!"
+        else:
+            # Create a new movie object with the form data
+            new_movie = Movies(user_id=user_id,
+                               title=movie_dict_data['Title'],
+                               director=movie_dict_data['Director'],
+                               year=movie_dict_data['Year'],
+                               rating=movie_dict_data['imdbRating'],
+                               note="")
+
+        # Add the user to the database
+        db.session.add(new_movie)
+        db.session.commit()
+        return "Movie has been added successfully!"
+
+    return render_template('add-movie.html', user_id=user_id)
 
 
 # @app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
