@@ -218,24 +218,33 @@ def update_movies(user_id, movie_id):
         return render_template('error.html', error_message=str(error))
 
 
-# @app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])
-# def delete_movie(user_id, movie_id):
-#     """
-#     Route: Delete Movie
-#     Handles deleting a movie from a user's collection.
-#     Args:
-#         user_id (str): User ID.
-#         movie_id (str): Movie ID.
-#     Returns:
-#         "The movie has been deleted successfully" upon successful POST request.
-#     """
-#     try:
-#         if request.method == 'POST':
-#             data_manager.delete_movie(user_id, movie_id)
-#             return "The movie has been deleted successfully"
-#     except Exception as error:
-#         # Handle the exception appropriately, e.g., logging, error message, etc.
-#         return render_template('error.html', error_message=str(error))
+@app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])
+def delete_movie(user_id, movie_id):
+    """
+    Route: Delete Movie
+    Handles deleting a movie from a user's collection.
+    Args:
+        user_id (str): User ID.
+        movie_id (str): Movie ID.
+    Returns:
+        "The movie has been deleted successfully" upon successful POST request.
+    """
+    if request.method == 'POST':
+        try:
+            movie_to_delete = Movies.query.filter_by(
+                movie_id=movie_id, user_id=user_id).first()
+            print(type(movie_to_delete))
+
+            if movie_to_delete:
+                # Delete the movie object from the session
+                db.session.delete(movie_to_delete)
+                db.session.commit()  # Commit the changes to the database
+                return "The movie has been deleted successfully"
+            else:
+                return "Movie not found."
+        except Exception as error:
+            # Handle the exception appropriately, e.g., logging, error message, etc.
+            return render_template('error.html', error_message=str(error))
 
 
 # @app.errorhandler(404)

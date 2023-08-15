@@ -77,7 +77,7 @@
                 <li class="movie-item">
                     {{ movie.title }} - Directed by: {{ movie.director }} -
                     {{ movie.year }} - Rate: {{ movie.rating }}
-                    <form action="/users/{{ id }}/delete_movie/{{ movie.movie_id }}" method="post">
+                    <form action="/users/{{ movie.user_id }}/delete_movie/{{ movie.movie_id }}" method="post">
                       <button type="submit">Delete</button>
                     </form>
                 </li>
