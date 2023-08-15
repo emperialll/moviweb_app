@@ -247,17 +247,17 @@ def delete_movie(user_id, movie_id):
             return render_template('error.html', error_message=str(error))
 
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     """
-#     Route: 404 Error Handler
-#     Handles rendering the 404 page.
-#     Args:
-#         e: Error object.
-#     Returns:
-#         Rendered HTML template for 404 page.
-#     """
-#     return render_template('404.html'), 404
+@app.errorhandler(404)
+def page_not_found(e):
+    """
+    Route: 404 Error Handler
+    Handles rendering the 404 page.
+    Args:
+        e: Error object.
+    Returns:
+        Rendered HTML template for 404 page.
+    """
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
