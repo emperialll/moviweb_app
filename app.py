@@ -102,17 +102,10 @@ def my_movies(user_id):
         Rendered HTML template with user's movies.
     """
     try:
-        users = User.query.all()
-        movies = Movies.query.all()
-        user_favorite_movies = []
-        for movie in movies:
-            if movie.user_id == int(user_id):
-                user_favorite_movies.append(movie)
-        for user in users:
-            if user.id == int(user_id):
-                name = user.name
+        user_favorite_movies = Movies.query.filter_by(user_id=user_id).all()
+        user = User.query.filter_by(id=user_id).first()
         return render_template('movies.html', movies=user_favorite_movies,
-                               name=name,
+                               name=user.name,
                                id=user_id)
     except Exception as error:
         # Handle the exception appropriately, e.g., logging, error message, etc.
@@ -219,8 +212,7 @@ def update_movies(user_id, movie_id):
                                    movie_director=movie.director,
                                    movie_year=movie.year,
                                    movie_note=movie.note)
-        else:
-            return "Movie not found"
+        return "Movie not found"
     except Exception as error:
         # Handle the exception appropriately, e.g., logging, error message, etc.
         return render_template('error.html', error_message=str(error))
