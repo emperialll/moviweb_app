@@ -1,2 +1,2 @@
-User ID,User Name,Movie ID,Movie Name,Director,Year,Rating,Note
-1,Miti,1,Tar,Aaron Wolf,2020,3.9,My Favorite Movie
+User ID,User Name,User Email,User Password,Movie ID,Movie Name,Director,Year,Rating,Note
+1,Shahriar,shahriar@example.com,$2b$12$r2oRQyyWwaVZLopqlGya5e7XcKbPE0qDc9glTlShcjhm5JbGcMvri,,,,,,

@@ -7,28 +7,33 @@ from .DataManager import DataManagerInterface
 # OMDB API to get movie data
 API: str = 'http://www.omdbapi.com/?apikey=6f0c3bf6&t='
 
+
 def read_csv_file(file_path):
     users = {}
-    
+
     with open(file_path, 'r') as file:
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
             user_id = row['User ID']
             user_name = row['User Name']
+            user_email = row['User Email']
+            user_password = row['User Password']
             movie_id = row['Movie ID']
             movie_name = row['Movie Name']
             director = row['Director']
             year = row['Year']
             rating = row['Rating']
             note = row['Note']
-            
+
             # Check if the user exists in the dictionary, if not, create a new user
-            if user_id not in users:
+            if user_email not in users:
                 users[user_id] = {
                     'name': user_name,
+                    'email': user_email,
+                    'password': user_password,
                     'movies': {}
                 }
-            
+
             # Add the movie to the user's dictionary of movies
             users[user_id]['movies'][movie_id] = {
                 'name': movie_name,
@@ -37,30 +42,36 @@ def read_csv_file(file_path):
                 'rating': rating,
                 'note': note
             }
-    
+
     return users
 
+
 def write_csv_file(file_path, users):
-    field_names = ['User ID', 'User Name', 'Movie ID', 'Movie Name', 'Director', 'Year', 'Rating', 'Note']
-    
+    field_names = ['User ID', 'User Name', 'User Email', 'User Password', 'Movie ID',
+                   'Movie Name', 'Director', 'Year', 'Rating', 'Note']
+
     with open(file_path, 'w', newline='') as file:
         csv_writer = csv.DictWriter(file, fieldnames=field_names)
         csv_writer.writeheader()
-        
+
         for user_id, user_data in users.items():
             user_name = user_data['name']
+            user_email = user_data['email']
+            user_password = user_data['password']
             movies = user_data['movies']
-            
+
             for movie_id, movie_data in movies.items():
                 movie_name = movie_data['name']
                 director = movie_data['director']
                 year = movie_data['year']
                 rating = movie_data['rating']
                 note = movie_data['note']
-                
+
                 csv_writer.writerow({
                     'User ID': user_id,
                     'User Name': user_name,
+                    'User Email': user_email,
+                    'User Password': user_password,
                     'Movie ID': movie_id,
                     'Movie Name': movie_name,
                     'Director': director,
@@ -84,15 +95,17 @@ class CSVDataManager(DataManagerInterface):
         users = read_csv_file(self.filename)
         user = users.get(user_id, None)
         return user["movies"]
-    
-    def add_user(self, name):
+
+    def add_user(self, name, email, password):
         users = {}
         if os.path.exists(self.filename):
             users = read_csv_file(self.filename)
             user_id = int(list(users.keys())[-1]) + 1
-            users[user_id] = {'name': name, 'movies':{'': {'name': '', 'director': '', 'year': '', 'rating': '', 'note': ''}}}
+            users[user_id] = {'name': name, 'email': email, 'password': password, 'movies': {
+                '': {'name': '', 'director': '', 'year': '', 'rating': '', 'note': ''}}}
         else:
-            users[1] = {'name': name, 'movies':{'': {'name': '', 'director': '', 'year': '', 'rating': '', 'note': ''}}}
+            users[1] = {'name': name, 'email': email, 'password': password, 'movies': {
+                '': {'name': '', 'director': '', 'year': '', 'rating': '', 'note': ''}}}
         write_csv_file(self.filename, users)
 
     def add_movie(self, user_id, movie_title):
@@ -111,20 +124,21 @@ class CSVDataManager(DataManagerInterface):
                     movie_id = 1
                 else:
                     movie_id = int(movies_id_list[-1]) + 1
-                
+
                 if users[user_id]['movies'] == {'': {'name': '', 'director': '', 'year': '', 'rating': '', 'note': ''}}:
-                    users[user_id]['movies'][movie_id] = users[user_id]['movies'].pop('')
-                    users[user_id]['movies'][movie_id] = {'name': movie_dict_data['Title'], 
-                                                        'director': movie_dict_data['Director'],
-                                                        'rating': movie_dict_data['imdbRating'],
-                                                        'year': movie_dict_data['Year'],
-                                                        'note': ''}
+                    users[user_id]['movies'][movie_id] = users[user_id]['movies'].pop(
+                        '')
+                    users[user_id]['movies'][movie_id] = {'name': movie_dict_data['Title'],
+                                                          'director': movie_dict_data['Director'],
+                                                          'rating': movie_dict_data['imdbRating'],
+                                                          'year': movie_dict_data['Year'],
+                                                          'note': ''}
                 else:
-                    users[user_id]['movies'][movie_id] = {'name': movie_dict_data['Title'], 
-                                                        'director': movie_dict_data['Director'],
-                                                        'rating': movie_dict_data['imdbRating'],
-                                                        'year': movie_dict_data['Year'],
-                                                        'note': ''}
+                    users[user_id]['movies'][movie_id] = {'name': movie_dict_data['Title'],
+                                                          'director': movie_dict_data['Director'],
+                                                          'rating': movie_dict_data['imdbRating'],
+                                                          'year': movie_dict_data['Year'],
+                                                          'note': ''}
         write_csv_file(self.filename, users)
 
     def update_movie(self, user_id, movie_id, movie_title, movie_director,
@@ -136,7 +150,7 @@ class CSVDataManager(DataManagerInterface):
                                                       'director': movie_director,
                                                       'year': movie_year,
                                                       'rating': movie_rating,
-                                                      'note': movie_note}                
+                                                      'note': movie_note}
             except KeyError:
                 print("Invalid user_id or movie_id")
             except ValueError:

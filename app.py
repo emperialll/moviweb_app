@@ -20,20 +20,32 @@ Imported Data Managers:
     CSVDataManager: A class from 'data_management.CSVDataManager' for 
     managing CSV data.
 """
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
+from flask_bcrypt import Bcrypt
 from data_management.JSONDataManager import JSONDataManager
 from data_management.CSVDataManager import CSVDataManager
 
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 # Use the appropriate path to your JSON or CSV file
 
-DATA_FILE_PATH = "user_data/users.json"
-data_manager = JSONDataManager(DATA_FILE_PATH)
+# DATA_FILE_PATH = "user_data/users.json"
+# data_manager = JSONDataManager(DATA_FILE_PATH)
 
-# DATA_FILE_PATH = "user_data/users.csv"
-# data_manager = CSVDataManager(DATA_FILE_PATH)
+DATA_FILE_PATH = "user_data/users.csv"
+data_manager = CSVDataManager(DATA_FILE_PATH)
+
+
+def encrypt_password(password):
+    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    return pw_hash
+
+
+def check_password(password, pw_hash):
+    password_is_match = bcrypt.check_password_hash(pw_hash, password)
+    return password_is_match
 
 
 def is_item_in_dict(item, dictionary):
@@ -52,7 +64,7 @@ def is_item_in_dict(item, dictionary):
         return False
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     """
     Route: Home
@@ -60,6 +72,14 @@ def home():
     Returns:
         Rendered HTML template.
     """
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        users = data_manager.get_all_users()
+        for user_id, user_data in users.items():
+            if user_data["email"] == email:
+                if check_password(password, user_data["password"]):
+                    return redirect(url_for('my_movies', user_id=user_id))
     return render_template('index.html')
 
 
@@ -112,7 +132,10 @@ if DATA_FILE_PATH.lower().endswith('.json'):
         """
         if request.method == 'POST':
             name = request.form.get('name')
-            user_details = {"name": name, "movies": {}}
+            email = request.form.get('email')
+            password = encrypt_password(request.form.get('password'))
+            user_details = {"name": name, "email": email,
+                            "password": password, "movies": {}}
             data_manager.add_user(user_details)
             return "Registration successful!"
 
@@ -129,7 +152,9 @@ elif DATA_FILE_PATH.lower().endswith('.csv'):
         """
         if request.method == 'POST':
             name = request.form.get('name')
-            data_manager.add_user(name)
+            email = request.form.get('email')
+            password = encrypt_password(request.form.get('password'))
+            data_manager.add_user(name, email, password)
             return "Registration successful!"
 
         return render_template('register.html')

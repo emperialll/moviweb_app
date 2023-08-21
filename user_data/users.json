@@ -1,100 +1,21 @@
 {
     "1": {
-        "name": "Shahriar",
-        "movies": {
-            "3": {
-                "name": "Matrix",
-                "director": "N/A",
-                "rating": 7.8,
-                "year": "1993"
-            },
-            "4": {
-                "name": "Tar",
-                "director": "Aaron Wolf",
-                "rating": 3.9,
-                "year": "2020"
-            },
-            "5": {
-                "name": "Ghost in the Shell: The New Movie",
-                "director": "Kazuchika Kise, Kazuya Nomura",
-                "rating": 6.6,
-                "year": "2015"
-            },
-            "6": {
-                "name": "Ghost in the Shell: The New Movie",
-                "director": "Kazuchika Kise, Kazuya Nomura",
-                "rating": 6.6,
-                "year": "2015"
-            }
-        }
-    },
-    "2": {
         "name": "Miti",
+        "email": "miti@example.com",
+        "password": "$2b$12$NqlpYD39Fq4wrA8asqjqH.aAEogAj.5rSBrfZyIRYFl1ii0P6fBDa",
         "movies": {
             "1": {
-                "name": "Inception",
-                "director": "Christopher Nolan",
-                "rating": 8.8,
-                "year": "2010"
+                "name": "Tar",
+                "director": "Aaron Wolf",
+                "rating": 3.8,
+                "year": "2020"
             },
             "2": {
-                "name": "Air",
-                "director": "Ben Affleck",
-                "rating": 7.5,
-                "year": "2023"
-            },
-            "3": {
                 "name": "Titanic",
                 "director": "James Cameron",
                 "rating": 7.9,
                 "year": "1997"
-            },
-            "4": {
-                "name": "Joker",
-                "director": "Todd Phillips",
-                "rating": 8.4,
-                "year": "2019"
-            },
-            "5": {
-                "name": "Blacklist",
-                "director": "N/A",
-                "rating": 6.8,
-                "year": "2019"
-            },
-            "6": {
-                "name": "Godfather",
-                "director": "Mohan Raja",
-                "rating": 5.2,
-                "year": "2022"
-            },
-            "7": {
-                "name": "Titanic",
-                "director": "James Cameron",
-                "rating": 7.9,
-                "year": "1997"
-            },
-            "8": {
-                "name": "Leila's Brothers",
-                "director": "Saeed Roustayi",
-                "rating": 7.9,
-                "year": "2022"
             }
         }
-    },
-    "3": {
-        "name": "Dina",
-        "movies": {}
-    },
-    "4": {
-        "name": "Mahsan",
-        "movies": {}
-    },
-    "5": {
-        "name": "Hossein",
-        "movies": {}
-    },
-    "6": {
-        "name": "Hossein",
-        "movies": {}
     }
 }
