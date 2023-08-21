@@ -1,2 +1,3 @@
 User ID,User Name,User Email,User Password,Movie ID,Movie Name,Director,Year,Rating,Note
-1,Shahriar,shahriar@example.com,$2b$12$r2oRQyyWwaVZLopqlGya5e7XcKbPE0qDc9glTlShcjhm5JbGcMvri,,,,,,
+1,Shahriar,shahriar@example.com,$2b$12$r2oRQyyWwaVZLopqlGya5e7XcKbPE0qDc9glTlShcjhm5JbGcMvri,1,Matrix,N/A,1993,7.8,
+1,Shahriar,shahriar@example.com,$2b$12$r2oRQyyWwaVZLopqlGya5e7XcKbPE0qDc9glTlShcjhm5JbGcMvri,2,Gladiator,Ridley Scott,2000,8.5,
