@@ -26,7 +26,8 @@ Imported Data Managers:
 # from data_management.CSVDataManager import CSVDataManager
 import requests
 import json
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
+from flask_bcrypt import Bcrypt
 from data_management.SQL_Data_Models import db, User, Movies
 import os
 import sys
@@ -43,6 +44,7 @@ sys.path.insert(0, parent_dir)
 
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 # Setting the database URI
 db_path = os.path.abspath('user_data/user_movies.sqlite')
@@ -52,22 +54,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 db.init_app(app)
 
 
-#######################   JSON / CSV   ########################
-###############################################################
-###############################################################
-
-# Use the appropriate path to your JSON or CSV file
-
-# DATA_FILE_PATH = "user_data/users.json"
-# data_manager = JSONDataManager(DATA_FILE_PATH)
-
-# DATA_FILE_PATH = "user_data/users.csv"
-# data_manager = CSVDataManager(DATA_FILE_PATH)
-
-##############################################################
+def encrypt_password(password):
+    pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    return pw_hash
 
 
-@app.route('/')
+def check_password(password, pw_hash):
+    password_is_match = bcrypt.check_password_hash(pw_hash, password)
+    return password_is_match
+
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
     """
     Route: Home
@@ -75,6 +72,12 @@ def home():
     Returns:
         Rendered HTML template.
     """
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        if check_password(password, user.password):
+            return redirect(url_for('my_movies', user_id=user.id))
     return render_template('index.html')
 
 
@@ -124,8 +127,10 @@ def register():
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
+        password = encrypt_password(request.form.get('password'))
+
         # Create a new User object with the form data
-        new_user = User(name=name, email=email)
+        new_user = User(name=name, email=email, password=password)
 
         # Add the user to the database
         db.session.add(new_user)

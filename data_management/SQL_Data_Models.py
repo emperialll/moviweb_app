@@ -12,6 +12,7 @@ class User(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     email = Column(String, nullable=False)
+    password = Column(String, nullable=False)
 
     def __str__(self):
         return f"User(id={self.id}, name='{self.name}', email='{self.email}')"
@@ -52,6 +53,7 @@ class Movies(db.Model):
 ################################################################################################
 # IMPORTANT:
 # Upon using this part comment out db.init_app(app) from app.py
+
 
 # if __name__ == '__main__':
 #     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
