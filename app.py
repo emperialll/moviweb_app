@@ -20,22 +20,31 @@ Imported Data Managers:
     CSVDataManager: A class from 'data_management.CSVDataManager' for 
     managing CSV data.
 """
+import json
+import os
+import requests
+import sys
 from flask import Flask, redirect, render_template, request, url_for
 from flask_bcrypt import Bcrypt
 from data_management.JSONDataManager import JSONDataManager
 from data_management.CSVDataManager import CSVDataManager
+from data_management.SQLDataManager import SQLiteDataManager
+from data_management.SQL_Data_Models import db, User, Movies
 
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-# Use the appropriate path to your JSON or CSV file
+# Use the appropriate path to your JSON, CSV or SQL file
 
 # DATA_FILE_PATH = "user_data/users.json"
 # data_manager = JSONDataManager(DATA_FILE_PATH)
 
-DATA_FILE_PATH = "user_data/users.csv"
-data_manager = CSVDataManager(DATA_FILE_PATH)
+# DATA_FILE_PATH = "user_data/users.csv"
+# data_manager = CSVDataManager(DATA_FILE_PATH)
+
+DATA_FILE_PATH = os.path.abspath('user_data/user_movies.sqlite')
+data_manager = SQLiteDataManager(app, DATA_FILE_PATH)
 
 
 def encrypt_password(password):
@@ -140,7 +149,8 @@ if DATA_FILE_PATH.lower().endswith('.json'):
             return "Registration successful!"
 
         return render_template('register.html')
-elif DATA_FILE_PATH.lower().endswith('.csv'):
+else:
+    # DATA_FILE_PATH.lower().endswith('.csv'):
     @app.route('/register', methods=['GET', 'POST'])
     def register():
         """
