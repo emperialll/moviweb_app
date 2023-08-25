@@ -85,10 +85,15 @@ def home():
         email = request.form.get('email')
         password = request.form.get('password')
         users = data_manager.get_all_users()
-        for user_id, user_data in users.items():
-            if user_data["email"] == email:
-                if check_password(password, user_data["password"]):
-                    return redirect(url_for('my_movies', user_id=user_id))
+        if type(users) is dict:  # For JSON and CSV Data Model
+            for user_id, user_data in users.items():
+                if user_data["email"] == email:
+                    if check_password(password, user_data["password"]):
+                        return redirect(url_for('my_movies', user_id=user_id))
+        # For SQL Data Model
+        user = User.query.filter_by(email=email).first()
+        if check_password(password, user.password):
+            return redirect(url_for('my_movies', user_id=user.id))
     return render_template('index.html')
 
 
