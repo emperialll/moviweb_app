@@ -59,9 +59,15 @@
 <body>
   <h1>List of Users:</h1>
   <ul>
-    {% for userID, userInfo in users.items() %}
-      <li>ID: {{ userID }}, Name: {{ userInfo["name"] }}</li>
-    {% endfor %}
+    {% if users is mapping %}
+      {% for userID, userInfo in users.items() %}
+        <li>ID: {{ userID }}, Name: {{ userInfo["name"] }}</li>
+      {% endfor %}
+    {% elif users is iterable and users is not string %}
+      {% for user in users %}
+        <li>ID: {{ user.id }}, Name: {{ user.name }}, Email: {{ user.email }}</li>
+      {% endfor %}
+    {% endif %}
   </ul>
 </body>
 </html>
