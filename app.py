@@ -116,14 +116,19 @@ def my_movies(user_id):
     """
     try:
         users = data_manager.get_all_users()
-        if is_item_in_dict(user_id, users):
-            user_name = users[user_id]["name"]
-            user_movies = data_manager.get_user_movies(user_id)
-            return render_template('movies.html', movies=user_movies,
-                                   user_name=user_name,
-                                   user_id=user_id)
-        else:
-            return render_template('304.html')
+        if type(users) is dict:
+            if is_item_in_dict(user_id, users):
+                user_name = users[user_id]["name"]
+                user_movies = data_manager.get_user_movies(user_id)
+                return render_template('movies.html', movies=user_movies,
+                                       user_name=user_name,
+                                       user_id=user_id)
+            else:
+                return render_template('304.html')
+        movies, user = data_manager.get_user_movies(user_id)
+        return render_template('movies.html', movies=movies,
+                               user_name=user.name,
+                               id=user_id)
     except Exception as error:
         # Handle the exception appropriately, e.g., logging, error message, etc.
         return render_template('error.html', error_message=str(error))

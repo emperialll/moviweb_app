@@ -29,7 +29,9 @@ class SQLiteDataManager(DataManagerInterface):
         return users
 
     def get_user_movies(self, user_id):
-        pass
+        user_favorite_movies = Movies.query.filter_by(user_id=user_id).all()
+        user = User.query.filter_by(id=user_id).first()
+        return user_favorite_movies, user
 
     def add_user(self, name, email, password):
         # Create a new User object with the form data

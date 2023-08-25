@@ -73,6 +73,7 @@
         <h1>Welcome {{ user_name }}!</h1>
         <h2>Favorite Movies:</h2>
         <ul>
+          {% if movies is mapping %}
             {% for movieID, movieInfo in movies.items() %}
                 <li class="movie-item">
                     {{ movieInfo["name"] }} - Directed by: {{ movieInfo["director"] }} -
@@ -82,6 +83,17 @@
                     </form>
                 </li>
             {% endfor %}
+          {% elif users is iterable and users is not string %}
+            {% for movie in movies %}
+            <li class="movie-item">
+                {{ movie.title }} - Directed by: {{ movie.director }} -
+                {{ movie.year }} - Rate: {{ movie.rating }}
+                <form action="/users/{{ movie.user_id }}/delete_movie/{{ movie.movie_id }}" method="post">
+                  <button type="submit">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+          {% endif %}
         </ul>
     </div>
 </body>
