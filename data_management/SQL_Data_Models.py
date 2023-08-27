@@ -1,7 +1,7 @@
 import os
 import sys
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Float, ForeignKey, Integer, String
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
 
 db = SQLAlchemy()
 
@@ -47,6 +47,25 @@ class Movies(db.Model):
 
     def __repr__(self):
         return self.__str__()
+
+
+class Reviews(db.Model):
+    __tablename__ = 'reviews'
+
+    review_id = Column(Integer, primary_key=True, autoincrement=True)
+    movie_id = Column(Integer, ForeignKey(
+        'favorite_movies.movie_id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    review_text = Column(Text)
+    rating = Column(Float)
+
+    def __str__(self):
+        return f"Review {self.review_id} for Movie {self.movie_id}, \
+            User {self.user_id}: {self.review_text}"
+
+    def __repr__(self):
+        return f"<Review(review_id={self.review_id}, movie_id={self.movie_id},\
+             user_id={self.user_id}, rating={self.rating})>"
 
 ######################## This section is being used only for table creation ####################
 ################################################################################################

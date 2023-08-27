@@ -1,7 +1,8 @@
 import requests
 import json
 from flask_sqlalchemy import SQLAlchemy
-from data_management.SQL_Data_Models import db, User, Movies
+from sqlalchemy.orm import joinedload
+from data_management.SQL_Data_Models import db, User, Movies, Reviews
 from .DataManager import DataManagerInterface
 
 # OMDB API to get movie data
@@ -84,3 +85,20 @@ class SQLiteDataManager(DataManagerInterface):
         except Exception as error:
             # Handle the exception appropriately, e.g., logging, error message, etc.
             print(error)
+
+    def add_review(self, user_id, movie_id, rating, review):
+        try:
+            # Create a new review object with the form data
+            new_review = Reviews(movie_id=movie_id,
+                                 user_id=user_id,
+                                 review_text=review,
+                                 rating=rating)
+            # Add the review to the database
+            db.session.add(new_review)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+
+    def get_reviews_for_movie(self, movie_id):
+        reviews = Reviews.query.filter_by(movie_id=movie_id).all()
+        return reviews

@@ -298,6 +298,30 @@ def delete_movie(user_id, movie_id):
         return render_template('error.html', error_message=str(error))
 
 
+if DATA_FILE_PATH.lower().endswith('.sqlite'):
+    @app.route('/users/<user_id>/add_review/<movie_id>', methods=['GET', 'POST'])
+    def add_review(user_id, movie_id):
+        if request.method == 'POST':
+            rating = request.form.get('rating')
+            review_text = request.form.get('review')
+            data_manager.add_review(
+                user_id, movie_id, float(rating), review_text)
+            return "Review submitted successfully"
+
+        else:
+            movies, user = data_manager.get_user_movies(user_id)
+            for movie in movies:
+                if movie.movie_id == int(movie_id):
+                    movie_title = movie.title
+                    # Replace with actual reviews retrieval
+                    previous_reviews = data_manager.get_reviews_for_movie(
+                        movie_id)
+
+            return render_template('review.html', user_id=user_id,
+                                   movie_id=movie_id, movie_title=movie_title,
+                                   previous_reviews=previous_reviews)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     """

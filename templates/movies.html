@@ -91,6 +91,7 @@
                 <form action="/users/{{ movie.user_id }}/delete_movie/{{ movie.movie_id }}" method="post">
                   <button type="submit">Delete</button>
                 </form>
+                <a href="/users/{{ movie.user_id }}/add_review/{{ movie.movie_id }}"><button>Review</button></a>
             </li>
             {% endfor %}
           {% endif %}
