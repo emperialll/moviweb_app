@@ -74,4 +74,13 @@ class SQLiteDataManager(DataManagerInterface):
         db.session.commit()
 
     def delete_movie(self, user_id, movie_id):
-        pass
+        try:
+            movie_to_delete = Movies.query.filter_by(
+                movie_id=movie_id, user_id=user_id).first()
+            # Delete the movie object from the session
+            db.session.delete(movie_to_delete)
+            db.session.commit()  # Commit the changes to the database
+            return True
+        except Exception as error:
+            # Handle the exception appropriately, e.g., logging, error message, etc.
+            print(error)

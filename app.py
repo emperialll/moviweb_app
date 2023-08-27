@@ -289,8 +289,10 @@ def delete_movie(user_id, movie_id):
     """
     try:
         if request.method == 'POST':
-            data_manager.delete_movie(user_id, movie_id)
-            return "The movie has been deleted successfully"
+            if data_manager.delete_movie(user_id, movie_id):
+                return "The movie has been deleted successfully"
+        else:
+            return "Movie not found", 405  # HTTP status code for Method
     except Exception as error:
         # Handle the exception appropriately, e.g., logging, error message, etc.
         return render_template('error.html', error_message=str(error))
