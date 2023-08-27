@@ -201,46 +201,79 @@ def add_movies(user_id):
     return render_template('add-movie.html', user_id=user_id)
 
 
-@app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
-def update_movies(user_id, movie_id):
-    """
-    Route: Update Movie
+if DATA_FILE_PATH.lower().endswith('.json') or DATA_FILE_PATH.lower().endswith('.csv'):
+    @app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
+    def update_movies(user_id, movie_id):
+        """
+        Route: Update Movie
 
-    Handles updating movie details for a user and rendering the movie update form.
+        Handles updating movie details for a user and rendering the movie update form.
 
-    Args:
-        user_id (str): User ID.
-        movie_id (str): Movie ID.
+        Args:
+            user_id (str): User ID.
+            movie_id (str): Movie ID.
 
-    Returns:
-        "Movie has been updated successfully!" upon successful POST request.
-        Rendered HTML update-movie form template for GET request.
-    """
-    try:
-        movies = data_manager.get_user_movies(user_id)
-        movie = movies[movie_id]
-        if request.method == 'POST':
-            movie_title = request.form.get('name')
-            movie_director = request.form.get('director')
-            movie_rating = request.form.get('rating')
-            movie_year = request.form.get('year')
-            movie_note = request.form.get('note')
-            data_manager.update_movie(user_id, movie_id, movie_title,
-                                      movie_director, movie_rating,
-                                      movie_year, movie_note)
-            return "Movie has been updated successfully!"
+        Returns:
+            "Movie has been updated successfully!" upon successful POST request.
+            Rendered HTML update-movie form template for GET request.
+        """
+        try:
+            movies = data_manager.get_user_movies(user_id)
+            movie = movies[movie_id]
+            if request.method == 'POST':
+                movie_title = request.form.get('name')
+                movie_director = request.form.get('director')
+                movie_rating = request.form.get('rating')
+                movie_year = request.form.get('year')
+                movie_note = request.form.get('note')
+                data_manager.update_movie(user_id, movie_id, movie_title,
+                                          movie_director, movie_rating,
+                                          movie_year, movie_note)
+                return "Movie has been updated successfully!"
 
-        return render_template('update-movie.html',
-                               user_id=user_id,
-                               movie_id=movie_id,
-                               movie_title=movie['name'],
-                               movie_rating=movie['rating'],
-                               movie_director=movie['director'],
-                               movie_year=movie['year'],
-                               movie_note=movie['note'])
-    except Exception as error:
-        # Handle the exception appropriately, e.g., logging, error message, etc.
-        return render_template('error.html', error_message=str(error))
+            return render_template('update-movie.html',
+                                   user_id=user_id,
+                                   movie_id=movie_id,
+                                   movie_title=movie['name'],
+                                   movie_rating=movie['rating'],
+                                   movie_director=movie['director'],
+                                   movie_year=movie['year'],
+                                   movie_note=movie['note'])
+        except Exception as error:
+            # Handle the exception appropriately, e.g., logging, error message, etc.
+            return render_template('error.html', error_message=str(error))
+else:
+    @app.route('/users/<user_id>/update_movie/<movie_id>', methods=['GET', 'POST'])
+    def update_movies(user_id, movie_id):
+        try:
+            if request.method == 'POST':
+                movie_title = request.form.get('name')
+                movie_director = request.form.get('director')
+                movie_rating = request.form.get('rating')
+                movie_year = request.form.get('year')
+                movie_note = request.form.get('note')
+                data_manager.update_movie(user_id, movie_id, movie_title,
+                                          movie_director, movie_rating,
+                                          movie_year, movie_note)
+                return "Movie has been updated successfully!"
+
+            movies, user = data_manager.get_user_movies(user_id)
+            for movie in movies:
+                if movie.movie_id == int(movie_id):
+                    return render_template('update-movie.html',
+                                           user_id=user_id,
+                                           movie_id=movie_id,
+                                           movie_title=movie.title,
+                                           movie_rating=movie.rating,
+                                           movie_director=movie.director,
+                                           movie_year=movie.year,
+                                           movie_note=movie.note)
+            return "Movie not found"
+
+        except Exception as error:
+            print(error)
+            # Handle the exception appropriately, e.g., logging, error message, etc.
+            return render_template('error.html', error_message=str(error))
 
 
 @app.route('/users/<user_id>/delete_movie/<movie_id>', methods=['GET', 'POST'])

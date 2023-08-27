@@ -60,9 +60,18 @@ class SQLiteDataManager(DataManagerInterface):
         db.session.add(new_movie)
         db.session.commit()
 
-    def update_movie(self, user_id, movie_id, movie_title, movie_director,
-                     movie_rating, movie_year, movie_note):
-        pass
+    def update_movie(self, user_id, movie_id, movie_title,
+                     movie_director, movie_rating, movie_year,
+                     movie_note):
+        movie = Movies.query.filter_by(
+            movie_id=movie_id, user_id=user_id).first()
+        movie.title = movie_title
+        movie.director = movie_director
+        movie.rating = movie_rating
+        movie.year = movie_year
+        movie.note = movie_note
+        # Update database
+        db.session.commit()
 
     def delete_movie(self, user_id, movie_id):
         pass
