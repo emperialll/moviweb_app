@@ -30,8 +30,12 @@ class SQLiteDataManager(DataManagerInterface):
         return users
 
     def get_user_movies(self, user_id):
-        user_favorite_movies = UserMovies.query.filter_by(
-            user_id=user_id).all()
+        # Retrieve all movies associated with the user
+        user_favorite_movies = db.session.query(UserMovies, Movies). \
+            join(Movies, UserMovies.movie_id == Movies.movie_id). \
+            filter(UserMovies.user_id == user_id).all()
+
+        # Retrieve the user's information
         user = User.query.filter_by(id=user_id).first()
         return user_favorite_movies, user
 

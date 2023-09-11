@@ -84,7 +84,7 @@
                 </li>
             {% endfor %}
           {% elif users is iterable and users is not string %}
-            {% for movie in movies %}
+            {% for user_movie, movie in movies %}
             <li class="movie-item">
                 {{ movie.title }} - Directed by: {{ movie.director }} -
                 {{ movie.year }} - Rate: {{ movie.rating }}
