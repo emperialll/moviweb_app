@@ -88,10 +88,10 @@
             <li class="movie-item">
                 {{ movie.title }} - Directed by: {{ movie.director }} -
                 {{ movie.year }} - Rate: {{ movie.rating }}
-                <form action="/users/{{ movie.user_id }}/delete_movie/{{ movie.movie_id }}" method="post">
+                <form action="/users/{{ user_movie.user_id }}/delete_movie/{{ user_movie.movie_id }}" method="post">
                   <button type="submit">Delete</button>
                 </form>
-                <a href="/users/{{ movie.user_id }}/add_review/{{ movie.movie_id }}"><button>Review</button></a>
+                <a href="/users/{{ user_movie.user_id }}/add_review/{{ user_movie.movie_id }}"><button>Review</button></a>
             </li>
             {% endfor %}
           {% endif %}
