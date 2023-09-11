@@ -29,7 +29,7 @@ from flask_bcrypt import Bcrypt
 from data_management.JSONDataManager import JSONDataManager
 from data_management.CSVDataManager import CSVDataManager
 from data_management.SQLDataManager import SQLiteDataManager
-from data_management.SQL_Data_Models import db, User, Movies
+from data_management.SQL_Data_Models import db, User, UserMovies, Movies
 
 
 app = Flask(__name__)

@@ -21,15 +21,12 @@ class User(db.Model):
         return self.__str__()
 
 
-class Movies(db.Model):
+class UserMovies(db.Model):
     __tablename__ = 'favorite_movies'
 
-    movie_id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    title = Column(String, nullable=False)
-    director = Column(String, nullable=False)
-    year = Column(Integer, nullable=False)
-    rating = Column(Float, nullable=False)
+    movie_id = Column(Integer, ForeignKey('movies.movie_id'), nullable=False)
     note = Column(String, nullable=False)
 
     def __str__(self):
@@ -49,13 +46,52 @@ class Movies(db.Model):
         return self.__str__()
 
 
+class Movies(db.Model):
+    __tablename__ = 'movies'
+
+    movie_id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String, nullable=False)
+    year = Column(Integer, nullable=False)
+    rating = Column(Float, nullable=False)
+    genre = Column(String, nullable=False)
+    director = Column(String, nullable=False)
+    writer = Column(String, nullable=False)
+    actors = Column(String, nullable=False)
+    plot = Column(String, nullable=False)
+    language = Column(String, nullable=False)
+    country = Column(String, nullable=False)
+    poster = Column(String, nullable=False)
+    _type = Column(String, nullable=False)
+
+    def __str__(self):
+        return (
+            f"Movies("
+            f"movie_id={self.movie_id}, "
+            f"title='{self.title}', "
+            f"year={self.year}, "
+            f"rating={self.rating}, "
+            f"genre='{self.genre}', "
+            f"director='{self.director}', "
+            f"writer='{self.writer}', "
+            f"actors='{self.actors}', "
+            f"plot='{self.plot}', "
+            f"language='{self.language}', "
+            f"country='{self.country}', "
+            f"poster='{self.poster}', "
+            f"type='{self._type}', "
+            f")"
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
+
 class Reviews(db.Model):
     __tablename__ = 'reviews'
 
     review_id = Column(Integer, primary_key=True, autoincrement=True)
-    movie_id = Column(Integer, ForeignKey(
-        'favorite_movies.movie_id'), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    movie_id = Column(Integer, ForeignKey('movies.movie_id'), nullable=False)
     review_text = Column(Text)
     rating = Column(Float)
 
@@ -70,9 +106,8 @@ class Reviews(db.Model):
 ######################## This section is being used only for table creation ####################
 ################################################################################################
 ################################################################################################
-# IMPORTANT:
-# Upon using this part comment out db.init_app(app) from app.py
 
+# important Note: To create tables uncomment below and comment out db.init_app(app) in SQLDataManager.py
 
 # if __name__ == '__main__':
 #     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -2,7 +2,7 @@ import requests
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import joinedload
-from data_management.SQL_Data_Models import db, User, Movies, Reviews
+from data_management.SQL_Data_Models import db, User, UserMovies, Movies, Reviews
 from .DataManager import DataManagerInterface
 
 # OMDB API to get movie data
@@ -30,7 +30,8 @@ class SQLiteDataManager(DataManagerInterface):
         return users
 
     def get_user_movies(self, user_id):
-        user_favorite_movies = Movies.query.filter_by(user_id=user_id).all()
+        user_favorite_movies = UserMovies.query.filter_by(
+            user_id=user_id).all()
         user = User.query.filter_by(id=user_id).first()
         return user_favorite_movies, user
 
@@ -50,12 +51,12 @@ class SQLiteDataManager(DataManagerInterface):
             return "Movie not found!"
         else:
             # Create a new movie object with the form data
-            new_movie = Movies(user_id=user_id,
-                               title=movie_dict_data['Title'],
-                               director=movie_dict_data['Director'],
-                               year=movie_dict_data['Year'],
-                               rating=movie_dict_data['imdbRating'],
-                               note="")
+            new_movie = UserMovies(user_id=user_id,
+                                   title=movie_dict_data['Title'],
+                                   director=movie_dict_data['Director'],
+                                   year=movie_dict_data['Year'],
+                                   rating=movie_dict_data['imdbRating'],
+                                   note="")
 
         # Add the user to the database
         db.session.add(new_movie)
@@ -64,7 +65,7 @@ class SQLiteDataManager(DataManagerInterface):
     def update_movie(self, user_id, movie_id, movie_title,
                      movie_director, movie_rating, movie_year,
                      movie_note):
-        movie = Movies.query.filter_by(
+        movie = UserMovies.query.filter_by(
             movie_id=movie_id, user_id=user_id).first()
         movie.title = movie_title
         movie.director = movie_director
@@ -76,7 +77,7 @@ class SQLiteDataManager(DataManagerInterface):
 
     def delete_movie(self, user_id, movie_id):
         try:
-            movie_to_delete = Movies.query.filter_by(
+            movie_to_delete = UserMovies.query.filter_by(
                 movie_id=movie_id, user_id=user_id).first()
             # Delete the movie object from the session
             db.session.delete(movie_to_delete)
