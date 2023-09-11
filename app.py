@@ -310,8 +310,8 @@ if DATA_FILE_PATH.lower().endswith('.sqlite'):
 
         else:
             movies, user = data_manager.get_user_movies(user_id)
-            for movie in movies:
-                if movie.movie_id == int(movie_id):
+            for user_movie, movie in movies:
+                if user_movie.movie_id == int(movie_id):
                     movie_title = movie.title
                     # Replace with actual reviews retrieval
                     previous_reviews = data_manager.get_reviews_for_movie(
