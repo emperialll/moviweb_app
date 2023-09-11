@@ -44,6 +44,18 @@ class SQLiteDataManager(DataManagerInterface):
         self.db.session.commit()
 
     def add_movie(self, user_id, movie_title):
+        # Check if the movie already exists in the Movies table
+        existing_movie = Movies.query.filter_by(title=movie_title).first()
+
+        if existing_movie:
+            # If the movie exists, add it to UserMovies and return
+            new_user_movie = UserMovies(
+                user_id=user_id, movie_id=existing_movie.movie_id, note="")
+            db.session.add(new_user_movie)
+            db.session.commit()
+            return "Movie already exists in the database."
+
+        # If the movie doesn't exist, fetch data from the API
         response = requests.get(API + movie_title)
         response.raise_for_status()
         movie_dict_data = json.loads(response.text)
@@ -51,16 +63,32 @@ class SQLiteDataManager(DataManagerInterface):
             return "Movie not found!"
         else:
             # Create a new movie object with the form data
-            new_movie = UserMovies(user_id=user_id,
-                                   title=movie_dict_data['Title'],
-                                   director=movie_dict_data['Director'],
-                                   year=movie_dict_data['Year'],
-                                   rating=movie_dict_data['imdbRating'],
-                                   note="")
+            new_movie = Movies(title=movie_dict_data['Title'],
+                               year=movie_dict_data['Year'],
+                               rating=movie_dict_data['imdbRating'],
+                               genre=movie_dict_data['Genre'],
+                               director=movie_dict_data['Director'],
+                               writer=movie_dict_data['Writer'],
+                               actors=movie_dict_data['Actors'],
+                               plot=movie_dict_data['Plot'],
+                               language=movie_dict_data['Language'],
+                               country=movie_dict_data['Country'],
+                               poster=movie_dict_data['Poster'],
+                               _type=movie_dict_data['Type'])
+            # Add the movie to the database
+            db.session.add(new_movie)
+            db.session.commit()
 
-        # Add the user to the database
-        db.session.add(new_movie)
+            # Retrieve the movie_id after it's been added to the database
+            movie_id = new_movie.movie_id  # Assuming 'id' is the primary key of the Movies table
+
+        new_user_movie = UserMovies(
+            user_id=user_id, movie_id=movie_id, note="")
+        # Add the user movie association to the database
+        db.session.add(new_user_movie)
         db.session.commit()
+
+        return "Movie added to the database and UserMovies."
 
     def update_movie(self, user_id, movie_id, movie_title,
                      movie_director, movie_rating, movie_year,
