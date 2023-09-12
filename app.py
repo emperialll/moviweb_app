@@ -30,10 +30,13 @@ from data_management.JSONDataManager import JSONDataManager
 from data_management.CSVDataManager import CSVDataManager
 from data_management.SQLDataManager import SQLiteDataManager
 from data_management.SQL_Data_Models import db, User, UserMovies, Movies
-
+from api import api  # Importing the API blueprint
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
+
+# Registering the blueprint
+app.register_blueprint(api, url_prefix='/api')
 
 # Use the appropriate path to your JSON, CSV or SQL file
 

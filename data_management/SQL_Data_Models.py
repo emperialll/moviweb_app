@@ -14,6 +14,13 @@ class User(db.Model):
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email
+        }
+
     def __str__(self):
         return f"User(id={self.id}, name='{self.name}', email='{self.email}')"
 
@@ -62,6 +69,23 @@ class Movies(db.Model):
     country = Column(String, nullable=False)
     poster = Column(String, nullable=False)
     _type = Column(String, nullable=False)
+
+    def to_dict(self):
+        return {
+            'movie_id': self.movie_id,
+            'title': self.title,
+            'year': self.year,
+            'rating': self.rating,
+            'genre': self.genre,
+            'director': self.director,
+            'writer': self.writer,
+            'actors': self.actors,
+            'plot': self.plot,
+            'language': self.language,
+            'country': self.country,
+            'poster': self.poster,
+            '_type': self._type
+        }
 
     def __str__(self):
         return (
