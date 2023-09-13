@@ -2,73 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <title>Users | MovieWeb App</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        position: relative;
-        align-items: flex-start;
-      }
-      body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url('../static/images/red-chairs.jpg') no-repeat center center fixed;
-        background-size: cover;
-        opacity: 0.2; /* Adjust the opacity as needed */
-        z-index: -1;
-      }
-      h1 {
-        text-align: center;
-        color: #000; /* Light grey color for the h1 element */
-        margin-bottom: 20px;
-        margin-top: 50px; /* 100px margin from the top of the screen */
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-      }
-      ul {
-        list-style: none;
-        padding: 0;
-        margin-top: 150px;
-        width: 100%;
-      }
-      li {
-        background-color: rgb(77, 2, 6); /* Light grey color for user rows */
-        color: #ddd;
-        margin-bottom: 10px;
-        margin-left: 30px; /* 30px margin from the left side of the screen */
-        margin-right: 30px; /* 30px margin from the right side of the screen */
-        padding: 10px;
-      }
-    </style>
 </head>
 <body>
-  <h1>List of Users:</h1>
-  <ul>
-    {% if users is mapping %}
-      {% for userID, userInfo in users.items() %}
-        <li>ID: {{ userID }}, Name: {{ userInfo["name"] }}</li>
-      {% endfor %}
-    {% elif users is iterable and users is not string %}
-      {% for user in users %}
-        <li>ID: {{ user.id }}, Name: {{ user.name }}, Email: {{ user.email }}</li>
-      {% endfor %}
-    {% endif %}
-  </ul>
+    <!-- NAVBAR -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Users</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Account
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+  
+    <!-- END OF NAVBAR -->
+    <div class="container-lg">
+      {% if users is mapping %}
+        {% for userID, userInfo in users.items() %}
+          <ul class="justify-content-center list-group" style="margin: 5px;">
+            <li class="list-group-item">ID: {{ userID }}</li>
+            <li class="list-group-item">Name: {{ userInfo["name"] }}</li>
+          </ul>
+        {% endfor %}
+      {% elif users is iterable and users is not string %}
+      <table class="table table-striped table-hover" style="margin-top: 50px;">
+        <tr class="table-dark">
+          <td class="table-dark">User ID</td>
+          <td class="table-dark">Name</td>
+          <td class="table-dark">Email</td>
+        </tr>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    </div>
+    
+    
 </body>
 </html>
 
