@@ -316,12 +316,16 @@ if DATA_FILE_PATH.lower().endswith('.sqlite'):
             for user_movie, movie in movies:
                 if user_movie.movie_id == int(movie_id):
                     movie_title = movie.title
+                    movie_poster = movie.poster
+                    movie_plot = movie.plot
                     # Replace with actual reviews retrieval
                     previous_reviews = data_manager.get_reviews_for_movie(
                         movie_id)
 
             return render_template('review.html', user_id=user_id,
                                    movie_id=movie_id, movie_title=movie_title,
+                                   movie_poster=movie_poster,
+                                   movie_plot=movie_plot,
                                    previous_reviews=previous_reviews)
 
 
